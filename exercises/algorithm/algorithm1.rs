@@ -1,8 +1,7 @@
 /*
-	single linked list merge
+	**single linked list merge
 	This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
 */
-// I AM NOT DONE
 
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
@@ -69,13 +68,49 @@ impl<T> LinkedList<T> {
             },
         }
     }
-	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
+	pub fn merge(mut list_a:LinkedList<T>,mut list_b:LinkedList<T>) -> Self
+    where
+        T: PartialOrd + Clone,
 	{
-		//TODO
+		let mut list_c = LinkedList::<T>::new();
+        let mut a_count: i32 = 0; 
+        let mut b_count: i32 = 0;
+
+        while a_count < list_a.length as i32 && b_count < list_b.length as i32 {
+            let a_num = list_a.get(a_count);
+            let b_num = list_b.get(b_count);
+            match (a_num, b_num) {
+                (Some(a), Some(b)) => {
+                    if a < b {
+                        list_c.add(a.clone());
+                        a_count += 1;
+                    } else {
+                        list_c.add(b.clone());
+                        b_count += 1;
+                    }
+                },
+
+                _ => break,
+            }
+        }
+
+        while a_count < list_a.length as i32 {
+            if let Some(v) = list_a.get(a_count) {
+                list_c.add(v.clone());
+            }
+            a_count += 1;
+        }
+
+        while b_count < list_b.length as i32 {
+            if let Some(v) = list_b.get(b_count) {
+                list_c.add(v.clone());
+            }
+            b_count += 1;
+            }
 		Self {
-            length: 0,
-            start: None,
-            end: None,
+            length: list_c.length,
+            start: list_c.start,
+            end: list_c.end,
         }
 	}
 }
